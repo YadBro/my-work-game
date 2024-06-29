@@ -3,7 +3,6 @@ name = "yadbro/my-work-game"
 version = "0.1.0"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
-private = true
 authors = [
 	"YadBro (https://github.com/YadBro)"
 ]
