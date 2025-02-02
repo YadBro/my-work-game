@@ -14,6 +14,6 @@ return function()
     end)
 end
 
-local GameConfig = require(game.ReplicatedStorage.Shared.utils.GameConfig)
+local GameConfig = require(game.ReplicatedStorage.Shared.utils.GameConfig.MainModule)
 
 local counterInstance = GameConfig.getConfigInstance("Counter")

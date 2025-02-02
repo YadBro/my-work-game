@@ -1,6 +1,6 @@
 return {
     utils = {
         run = script:WaitForChild("utils").run,
-        GameConfig = script:WaitForChild("utils").GameConfig,
+        GameConfig = script:WaitForChild("utils").GameConfig.MainModule,
     }
 }
