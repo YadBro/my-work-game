@@ -46,23 +46,25 @@ end
 function Timer:Countdown(second: number, onWaitHandler: (currentWaitTime: number) -> (), onBreakConditionHandler: (currentWaitTime: number) -> (boolean)?): ()
 	self:SetCountdownCanceled(false)
 	local delayTime = 0
-	
+
 	if not self._isCountdownRunning then
 		self:SetCountdownRunning(true)
 		while delayTime <= second do
 			if self._isCountdownCanceled then
+				self:SetCountdownRunning(false)
 				break
 			end
-	
+
 			delayTime += Heartbeat:Wait()
-	
+
 			local countdownTime = (second + 1) - math.ceil(delayTime)
-	
+
 			if onWaitHandler then
 				onWaitHandler(countdownTime)
 			end
-	
+
 			if onBreakConditionHandler then
+				self:SetCountdownRunning(false)
 				local breakCondition = onBreakConditionHandler(countdownTime)
 				if breakCondition then
 					break
