@@ -17,8 +17,8 @@ type TimerImpl = {
 		onWaitHandler: (currentWaitTime: number) -> ()?,
 		onBreakConditionHandler: (currentWaitTime: number) -> (boolean)?)
 	-> (),
-	_SetCountdownCanceled: (self: Timer, condition: boolean)-> (),
-	_SetCountdownRunning: (self: Timer, condition: boolean)-> (),
+	SetCountdownCanceled: (self: Timer, condition: boolean)-> (),
+	SetCountdownRunning: (self: Timer, condition: boolean)-> (),
 	GetCountdownStatus: (self: Timer) -> {
 		isCountdownCanceled: boolean,
 		isCountdownRunning: boolean,
@@ -44,39 +44,41 @@ function Timer.new()
 end
 
 function Timer:Countdown(second: number, onWaitHandler: (currentWaitTime: number) -> (), onBreakConditionHandler: (currentWaitTime: number) -> (boolean)?): ()
-	self:_SetCountdownCanceled(false)
-	self:_SetCountdownRunning(true)
+	self:SetCountdownCanceled(false)
 	local delayTime = 0
-
-	while delayTime <= second do
-		if self._isCountdownCanceled then
-			break
-		end
-
-		delayTime += Heartbeat:Wait()
-
-		local countdownTime = (second + 1) - math.ceil(delayTime)
-
-		if onWaitHandler then
-			onWaitHandler(countdownTime)
-		end
-
-		if onBreakConditionHandler then
-			local breakCondition = onBreakConditionHandler(countdownTime)
-			if breakCondition then
+	
+	if not self._isCountdownRunning then
+		self:SetCountdownRunning(true)
+		while delayTime <= second do
+			if self._isCountdownCanceled then
 				break
+			end
+	
+			delayTime += Heartbeat:Wait()
+	
+			local countdownTime = (second + 1) - math.ceil(delayTime)
+	
+			if onWaitHandler then
+				onWaitHandler(countdownTime)
+			end
+	
+			if onBreakConditionHandler then
+				local breakCondition = onBreakConditionHandler(countdownTime)
+				if breakCondition then
+					break
+				end
 			end
 		end
 	end
 
-	self:_SetCountdownRunning(false)
+	self:SetCountdownRunning(false)
 end
 
-function Timer:_SetCountdownCanceled(condition)
+function Timer:SetCountdownCanceled(condition)
 	self._isCountdownCanceled = condition
 end
 
-function Timer:_SetCountdownRunning(condition)
+function Timer:SetCountdownRunning(condition)
 	self._isCountdownRunning = condition
 end
 
