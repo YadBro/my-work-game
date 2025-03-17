@@ -3,14 +3,26 @@ local RunService = game:GetService("RunService")
 
 local Heartbeat = RunService.Heartbeat
 
+type initDataTimer = {
+	_isCountdownCanceled: boolean,
+	_isCountdownRunning: boolean
+}
+
 type TimerImpl = {
 	__index: TimerImpl,
-	WaitDelay: (
+	new: () -> Timer,
+	Countdown: (
+		self: Timer,
 		second: number,
 		onWaitHandler: (currentWaitTime: number) -> ()?,
 		onBreakConditionHandler: (currentWaitTime: number) -> (boolean)?)
 	-> (),
-	GetIsRunning: () -> boolean,
+	_SetCountdownCanceled: (self: Timer, condition: boolean)-> (),
+	_SetCountdownRunning: (self: Timer, condition: boolean)-> (),
+	GetCountdownStatus: (self: Timer) -> {
+		isCountdownCanceled: boolean,
+		isCountdownRunning: boolean,
+	},
 	GetCalculateSpeedRunTime: (startTime: number?) -> {
 		Text: string,
 		Text_Human_Readable: string,
@@ -18,21 +30,37 @@ type TimerImpl = {
 	},
 }
 
-type Timer = typeof(setmetatable({} :: {}, {} :: TimerImpl))
+type Timer = typeof(setmetatable({} :: initDataTimer, {} :: TimerImpl))
 
 local Timer: TimerImpl = {} :: TimerImpl
 Timer.__index = Timer
 
-function Timer.WaitDelay(second: number, onWaitHandler: (currentWaitTime: number) -> (), onBreakConditionHandler: (currentWaitTime: number) -> (boolean)?): ()
+function Timer.new()
+	local self = {}
+	self._isCountdownCanceled = false
+	self._isCountdownRunning = false
+
+	return setmetatable(self, Timer)
+end
+
+function Timer:Countdown(second: number, onWaitHandler: (currentWaitTime: number) -> (), onBreakConditionHandler: (currentWaitTime: number) -> (boolean)?): ()
+	self:_SetCountdownCanceled(false)
+	self:_SetCountdownRunning(true)
 	local delayTime = 0
 
 	while delayTime <= second do
+		if self._isCountdownCanceled then
+			break
+		end
+
 		delayTime += Heartbeat:Wait()
+
 		local countdownTime = (second + 1) - math.ceil(delayTime)
+
 		if onWaitHandler then
 			onWaitHandler(countdownTime)
 		end
-		
+
 		if onBreakConditionHandler then
 			local breakCondition = onBreakConditionHandler(countdownTime)
 			if breakCondition then
@@ -40,6 +68,23 @@ function Timer.WaitDelay(second: number, onWaitHandler: (currentWaitTime: number
 			end
 		end
 	end
+
+	self:_SetCountdownRunning(false)
+end
+
+function Timer:_SetCountdownCanceled(condition)
+	self._isCountdownCanceled = condition
+end
+
+function Timer:_SetCountdownRunning(condition)
+	self._isCountdownRunning = condition
+end
+
+function Timer:GetCountdownStatus()
+	return {
+		isCountdownCanceled = self._isCountdownCanceled,
+		isCountdownRunning = self._isCountdownRunning,
+	}
 end
 
 function Timer.GetCalculateSpeedRunTime(startTime: number)
