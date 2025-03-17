@@ -1,6 +1,6 @@
 [package]
 name = "yadbro/my-work-game"
-version = "0.20.0"
+version = "0.21.0"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 authors = [
