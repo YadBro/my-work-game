@@ -1,10 +1,10 @@
 [package]
 name = "yadbro/my-work-game"
-version = "0.13.0"
+version = "0.14.0"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 authors = [
 	"YadBro (https://github.com/YadBro)"
 ]
-include = ["utils/**", "wally.toml", "init.lua"]
+include = ["utils", "wally.toml", "init.lua"]
 exclude = ["**"]
