@@ -1,7 +1,7 @@
 return {
     utils = {
-        run = script:WaitForChild("utils").run,
-        GameConfig = script:WaitForChild("utils").GameConfig.MainModule,
-        Timer = script:WaitForChild("utils").Timer.MainModule,
+        run = require(script:WaitForChild("utils").run),
+        GameConfig = require(script:WaitForChild("utils").GameConfig.MainModule),
+        Timer = require(script:WaitForChild("utils").Timer.MainModule),
     }
 }
