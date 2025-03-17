@@ -1,9 +1,9 @@
 [package]
 name = "yadbro/my-work-game"
-version = "0.16.0"
+version = "0.17.0"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 authors = [
 	"YadBro (https://github.com/YadBro)"
 ]
-exclude = ["wally.lock", "test", "Packages"]
+exclude = ["wally.lock", "test", "Packages", "test"]
