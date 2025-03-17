@@ -6,5 +6,5 @@ realm = "shared"
 authors = [
 	"YadBro (https://github.com/YadBro)"
 ]
-include = ["utils/**", "wally.toml", "wally.lock"]
+include = ["wally.toml", "wally.lock"]
 exclude = ["**"]
